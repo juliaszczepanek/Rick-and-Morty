@@ -40,9 +40,19 @@ Vite
 
 Browse and filter characters by species, status, and gender.
 
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.33.09.png">
+
+<h2>Mobile View</h2>
+
+<img width="450" src="./screenshots/Screenshot 2025-02-24 at 20.14.42.png">
+
 <h3>Episodes Page</h3>
 
 Explore all episodes with detailed information and the option to add episodes to watchlists.
+
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.49.51.png">
+
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.49.59.png">
 
 <h3>Locations Page</h3>
 
@@ -54,6 +64,10 @@ Discover various locations featured in the Rick and Morty universe.
 
 Create personalized watchlists, mark episodes as watched, and share them via email.
 
-<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 20.14.42.png">
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.50.19.png">
 
-<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 20.14.42.png">
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.50.25.png">
+
+<h3>Log in Form</h3>
+
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.33.45.png">

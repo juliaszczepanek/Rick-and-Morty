@@ -13,6 +13,7 @@
   &__page {
     margin: 2rem 0;
     font-size: 2.2rem;
+    color: $white;
 
     @include respond-to(mobile-medium) {
       font-size: 1.6rem;

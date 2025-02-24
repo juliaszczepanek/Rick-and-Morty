@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import emailjs from "@emailjs/browser";
 
@@ -12,29 +14,33 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: {
-    xs: 250,
-    sm: 300,
-    lg: 400,
+    xs: "70%",
+    sm: 400,
+    lg: 500,
   },
+  bgcolor: "#111111",
+  border: "2px solid #cccccc",
   borderRadius: "10px",
-  bgcolor: "rgb(30, 30, 30)",
-  border: "2px solid rgba(255, 255, 255, 0.1)",
-  boxShadow: 24,
-  p: 5,
   color: "#fff",
+  p: {
+    xs: 3,
+    sm: 4,
+  },
 };
 
-export default function FormModal({ isOpen, onClose, currentUser, watchList }) {
+export default function FormModal({ isOpen, onClose, currentUser, watchlist }) {
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    if (!watchlist || !watchlist.episodes) return;
+
     const serviceId = import.meta.env.VITE_SERVICE_ID;
     const templateId = import.meta.env.VITE_TEMPLATE_ID;
     const publicKey = import.meta.env.VITE_PUBLIC_KEY;
 
-    const formattedWatchList = watchList
+    const formattedWatchList = watchlist.episodes
       .map((episode) => {
         const characters = episode.characters
           .map((char) => char.name)
@@ -57,6 +63,7 @@ export default function FormModal({ isOpen, onClose, currentUser, watchList }) {
       .then((response) => {
         console.log("Email sent successfully", response);
         setEmail("");
+        onClose();
       })
       .catch((error) => {
         console.error("Error sending email: ", error);
@@ -67,62 +74,80 @@ export default function FormModal({ isOpen, onClose, currentUser, watchList }) {
     <Modal
       open={isOpen}
       onClose={onClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      aria-labelledby="modal-title"
+      aria-describedby="modal-description"
     >
-      <form onSubmit={handleSubmit} className="form__modal">
-        <Box sx={style} className="form__modal--box">
-          <Typography
-            id="modal-modal-title"
-            variant="h4"
-            component="h2"
-            sx={{ textAlign: "center", marginBottom: "2rem" }}
-          >
-            Share Watchlist via E-mail
-          </Typography>
-          <TextField
-            label="Email"
-            variant="outlined"
-            fullWidth
-            sx={{
-              borderRadius: "10px",
-              backgroundColor: "#fff",
-              marginBottom: "2rem",
-              color: "white",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "10px",
+      <Box sx={style}>
+        <IconButton
+          onClick={onClose}
+          sx={{
+            position: "absolute",
+            top: {
+              xs: 10,
+              sm: 20,
+            },
+            right: 20,
+            color: "#fff",
+          }}
+        >
+          <CloseIcon fontSize="large" />
+        </IconButton>
 
-                fontSize: "12px",
-                padding: "0.5rem 1.5rem",
-                height: "40px",
-                "& input": {
-                  padding: "0.4rem",
-                },
-              },
-            }}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{
-              backgroundColor: "#13acc9",
-              "&:hover": {
-                backgroundColor: "#0e8ba8",
-              },
-              fontSize: "1rem",
-              padding: "0.6rem 2rem",
-              display: "block",
-              margin: "0 auto",
-            }}
-          >
-            Share
-          </Button>
-        </Box>
-      </form>
+        <Typography
+          id="modal-title"
+          variant="h4"
+          component="h2"
+          sx={{
+            textAlign: "center",
+            minWidth: "250px",
+            fontFamily: "Squada One",
+            fontSize: "25px",
+            mb: 4,
+            mt: {
+              xs: 3,
+            },
+          }}
+        >
+          Share "{watchlist?.name || "Watchlist"}" via Email
+        </Typography>
+
+        <TextField
+          label="Enter Email"
+          variant="outlined"
+          fullWidth
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          sx={{
+            mb: 3,
+            bgcolor: "#ffffff",
+            borderRadius: "10px",
+            color: "#000",
+            padding: "0.5rem, 1rem",
+            fontFamily: "Allerta",
+          }}
+        />
+        <Button
+          type="submit"
+          onClick={handleSubmit}
+          variant="contained"
+          fullWidth
+          sx={{
+            bgcolor: "#13acc9",
+            color: "#fff",
+            mb: 4,
+            textTransform: "none",
+            fontFamily: "Squada One",
+            fontSize: "14px",
+            "&:hover": {
+              bgcolor: "#0e8ba8",
+            },
+          }}
+        >
+          Share
+        </Button>
+      </Box>
     </Modal>
   );
 }

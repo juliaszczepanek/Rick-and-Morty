@@ -3,3 +3,4 @@ export { default as Footer } from "./Footer";
 export { default as CharacterModal } from "./CharacterModal";
 export { default as SearchBar } from "./SearchBar";
 export { default as Pagination } from "./Pagination";
+export { default as WatchlistModal } from "./WatchlistsModal";

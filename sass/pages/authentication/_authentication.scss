@@ -16,12 +16,20 @@
     padding: 3rem;
     background-color: rgb(30, 30, 30);
 
+    @include respond-to(mobile-medium) {
+      width: 70vw;
+    }
+
     &--body {
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
       padding: 0 2rem;
+
+      @include respond-to(mobile-medium) {
+        padding: 0 1rem;
+      }
     }
 
     &--heading {
@@ -90,6 +98,11 @@
 
     &:hover {
       background-color: lighten($color-secondary, 10%);
+    }
+
+    @include respond-to(mobile-small) {
+      padding: 0.6rem 1rem;
+      font-size: 1.6rem;
     }
   }
 }

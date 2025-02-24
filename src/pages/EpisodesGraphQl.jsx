@@ -1,14 +1,13 @@
 import { fetchEpisodesGraphQl } from "../api/rickAndMortyApi";
-import { Pagination, SearchBar } from "./../UI";
+import { Pagination, SearchBar, WatchlistModal } from "./../UI";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { Spinner } from "@nextui-org/spinner";
-import BookmarkIcon from "@mui/icons-material/Bookmark";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { IconButton } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { useAuth } from "../contexts/AuthContext";
-import { doc, updateDoc, arrayUnion, getDoc, setDoc } from "firebase/firestore";
+import { doc, updateDoc, getDoc, setDoc } from "firebase/firestore";
 import { db } from ".././firebase";
 
 export default function EpisodesGraphQl({ isMenuOpen }) {
@@ -21,7 +20,9 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
   const [totalPages, setTotalPages] = useState(null);
   const queryFromUrl = searchParams.get("query") || "";
   const [searchQuery, setSearchQuery] = useState(queryFromUrl);
-  const [watchList, setWatchList] = useState([]);
+  const [watchlists, setWatchlists] = useState([]);
+  const [selectedEpisode, setSelectedEpisode] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const isLoggedIn = !!currentUser;
 
@@ -31,7 +32,40 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
     const userDocRef = doc(db, "watchlists", userId);
     const docSnap = await getDoc(userDocRef);
     if (!docSnap.exists()) {
-      await setDoc(userDocRef, { episodes: [] });
+      await setDoc(userDocRef, { watchlists: [] });
+    }
+  };
+
+  const getUserWatchlists = async () => {
+    if (!currentUser) return [];
+
+    const userId = currentUser.uid;
+    const userDocRef = doc(db, "watchlists", userId);
+
+    try {
+      const docSnap = await getDoc(userDocRef);
+      if (docSnap.exists()) {
+        return docSnap.data().watchlists || [];
+      } else {
+        return [];
+      }
+    } catch (err) {
+      console.error("Error fetching watchlists", err);
+      return [];
+    }
+  };
+
+  const updateUserWatchlists = async (updatedWatchlists) => {
+    if (!currentUser) return;
+
+    const userId = currentUser.uid;
+    const userDocRef = doc(db, "watchlists", userId);
+
+    try {
+      await updateDoc(userDocRef, { watchlists: updatedWatchlists });
+      setWatchlists(updatedWatchlists);
+    } catch (err) {
+      console.error("Error updating watchlists", err);
     }
   };
 
@@ -39,50 +73,9 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
     createUserDocIfNotExists();
   }, [currentUser]);
 
-  const addEpisodeToFirestore = async (episode) => {
-    if (!currentUser) {
-      return;
-    }
-
-    const userId = currentUser.uid;
-    const userDocRef = doc(db, "watchlists", userId);
-
-    try {
-      await updateDoc(userDocRef, {
-        episodes: arrayUnion({ ...episode, watched: false }),
-      });
-    } catch (err) {
-      console.error("Cannot save episode to Firebase", err);
-    }
-  };
-
-  const getCharacterNamesForEpisode = (episode) => {
-    return episode.characters.map((character) => character.name).join(", ");
-  };
-
-  const onBookmarkClick = (episode) => {
-    const isAlreadyBookmarked = watchList.some(
-      (item) => item.id === episode.id
-    );
-    let updatedWatchList;
-
-    if (isAlreadyBookmarked) {
-      updatedWatchList = watchList.filter((item) => item.id !== episode.id);
-    } else {
-      updatedWatchList = [...watchList, { ...episode, watched: false }];
-      addEpisodeToFirestore(episode);
-    }
-
-    setWatchList(updatedWatchList);
-  };
-
   useEffect(() => {
-    setCurrentPage(pageFromUrl);
-  }, [pageFromUrl]);
-
-  useEffect(() => {
-    setSearchQuery(queryFromUrl);
-  }, [queryFromUrl]);
+    fetchWatchlists();
+  }, [currentUser]);
 
   useEffect(() => {
     const loadEpisodesAndCharacters = async () => {
@@ -100,29 +93,59 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
     loadEpisodesAndCharacters();
   }, [currentPage, searchQuery]);
 
-  useEffect(() => {
-    const getDataFromFirebase = async () => {
-      if (!currentUser) {
-        return;
-      }
+  const fetchWatchlists = async () => {
+    const data = await getUserWatchlists();
+    setWatchlists(data);
+  };
 
-      const userId = currentUser.uid;
-      const userDocRef = doc(db, "watchlists", userId);
+  const createWatchlistInFirestore = async (watchlistName) => {
+    const updatedWatchlists = await getUserWatchlists();
 
-      try {
-        const docSnap = await getDoc(userDocRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          const fetchedEpisodes = data.episodes || [];
-          setWatchList(fetchedEpisodes);
+    const watchlistExists = updatedWatchlists.some(
+      (list) => list.name.toLowerCase() === watchlistName.toLowerCase()
+    );
+
+    if (!watchlistExists) {
+      const newWatchlist = { name: watchlistName, episodes: [] };
+      const newWatchlists = [...updatedWatchlists, newWatchlist];
+
+      await updateUserWatchlists(newWatchlists);
+    }
+  };
+
+  const onAddToMultipleWatchlists = async (selectedWatchlists) => {
+    if (!currentUser || !selectedEpisode || selectedWatchlists.length === 0)
+      return;
+
+    const updatedWatchlists = await getUserWatchlists();
+
+    const newWatchlists = updatedWatchlists.map((watchlist) => {
+      if (selectedWatchlists.includes(watchlist.name)) {
+        const episodeExists = watchlist.episodes.some(
+          (ep) => ep.id === selectedEpisode.id
+        );
+
+        if (!episodeExists) {
+          return {
+            ...watchlist,
+            episodes: [
+              ...watchlist.episodes,
+              { ...selectedEpisode, watched: false },
+            ],
+          };
         }
-      } catch (err) {
-        console.error("Error fetching watchlist: ", err);
       }
-    };
+      return watchlist;
+    });
 
-    getDataFromFirebase();
-  }, [currentUser]);
+    await updateUserWatchlists(newWatchlists);
+    setIsModalOpen(false);
+  };
+
+  const handleBookmarkClick = (episode) => {
+    setSelectedEpisode(episode);
+    setIsModalOpen(true);
+  };
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -176,7 +199,6 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
         </div>
       ) : (
         <>
-          {" "}
           <div className={`episodes__search ${isMenuOpen ? "hidden" : ""}`}>
             <SearchBar searchQuery={searchQuery} onSearch={handleSearch} />
             <Button
@@ -213,44 +235,34 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
                 </tr>
               </thead>
               <tbody className="episodes__body">
-                {episodes.map((episode) => {
-                  const isBookmarked = watchList.some(
-                    (item) => item.id === episode.id
-                  );
-                  return (
-                    <tr className="table__row" key={episode.id}>
-                      <td className="table__cell">{episode.episode}</td>
-                      <td className="table__cell">{episode.name}</td>
-                      <td className="table__cell">{episode.air_date}</td>
-                      <td className="table__cell table__hidden-cell">
-                        {getCharacterNamesForEpisode(episode)}
-                      </td>
-                      <td className="table__cell episodes__cell--bookmark">
-                        {isLoggedIn && (
-                          <IconButton
-                            className={`episodes__bookmark ${
-                              isMenuOpen ? "hidden" : ""
-                            }`}
-                            onClick={() => onBookmarkClick(episode)}
-                            sx={{
-                              color: "white",
-                              minWidth: 0,
-                              padding: "8px",
-                              margin: "0 10px",
-                              backgroundColor: "transparent",
-                            }}
-                          >
-                            {isBookmarked ? (
-                              <BookmarkIcon />
-                            ) : (
-                              <BookmarkBorderIcon />
-                            )}
-                          </IconButton>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
+                {episodes.map((episode) => (
+                  <tr className="table__row" key={episode.id}>
+                    <td className="table__cell">{episode.episode}</td>
+                    <td className="table__cell">{episode.name}</td>
+                    <td className="table__cell">{episode.air_date}</td>
+                    <td className="table__cell table__hidden-cell">
+                      {episode.characters.map((c) => c.name).join(", ")}
+                    </td>
+                    <td
+                      className={`table__cell episodes__cell--bookmark ${
+                        isMenuOpen ? "hidden" : ""
+                      }`}
+                    >
+                      {isLoggedIn && (
+                        <IconButton
+                          onClick={() => handleBookmarkClick(episode)}
+                          sx={{
+                            color: "white",
+                            backgroundColor: "#13acc9",
+                            "&:hover": { backgroundColor: "#0d7b91" },
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
@@ -262,6 +274,17 @@ export default function EpisodesGraphQl({ isMenuOpen }) {
           />
         </>
       )}
+      <WatchlistModal
+        open={isModalOpen}
+        handleClose={() => setIsModalOpen(false)}
+        existingWatchlists={watchlists.map((list) => list.name)}
+        onCreateWatchlist={(name) => {
+          createWatchlistInFirestore(name);
+        }}
+        onAddToWatchlist={(selectedWatchlists) => {
+          onAddToMultipleWatchlists(selectedWatchlists);
+        }}
+      />
     </div>
   );
 }

@@ -5,7 +5,52 @@
     font-size: 2rem;
   }
 
+  &__empty {
+    padding: 2rem 0;
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  &__id {
+    width: 7% !important;
+  }
+
+  &__watched,
+  &__remove {
+    width: 15% !important;
+  }
+  &__episode {
+    width: 20% !important;
+  }
+
   .hidden {
     display: none;
+  }
+
+  &__header-box {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    @include respond-to(mobile-medium) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 10px;
+
+    @include respond-to(mobile-medium) {
+      margin-left: 2.5rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  &__name {
+    @include respond-to(mobile-medium) {
+      font-size: 3rem;
+    }
   }
 }

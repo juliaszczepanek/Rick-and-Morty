@@ -2,6 +2,8 @@
 
 A responsive React application that fetches and displays data from the Rick and Morty API, enabling users to explore characters, episodes, and locations from the popular TV series.
 
+🌐 <a href="https://rickandmortyhub.netlify.app/characters">Live Demo</a>
+
 <h2>✨ Features</h2>
 
 📡 API Integration: Fetches and dynamically displays data from the official Rick and Morty API.
@@ -17,22 +19,6 @@ A responsive React application that fetches and displays data from the Rick and 
 🎨 Custom UI: Fully designed in Figma, implemented using Material UI.
 
 📱 Fully Responsive: Optimized for mobile, tablet, and desktop devices.
-
-<h2>🚀 Tech Stack</h2>
-
-React.js
-
-Firebase & Firestore
-
-React Router
-
-Material UI
-
-CSS (SASS)
-
-Axios
-
-Vite
 
 <h2>📸 Screenshots</h2>
 
@@ -71,3 +57,19 @@ Create personalized watchlists, mark episodes as watched, and share them via ema
 <h3>Log in Form</h3>
 
 <img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.33.45.png">
+
+<h2>🚀 Tech Stack</h2>
+
+React.js
+
+Firebase & Firestore
+
+React Router
+
+Material UI
+
+CSS (SASS)
+
+Axios
+
+Vite

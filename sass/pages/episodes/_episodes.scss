@@ -1,0 +1,35 @@
+.episodes {
+  &__search {
+    display: flex;
+    gap: 2.5rem;
+    justify-content: right;
+    opacity: 1;
+    align-items: center;
+    border-radius: 8px;
+    padding: 1.5rem 0;
+    padding-right: 6rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: visible;
+    transition: opacity 0.3s ease-in-out;
+
+    @include respond-to(mobile-medium) {
+      justify-content: center;
+      padding: 1rem 2rem;
+      margin-right: 0;
+    }
+
+    &.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  &__clear {
+    padding-right: 6rem;
+  }
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}

@@ -1,0 +1,33 @@
+.locations {
+  &__search {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2.5rem;
+    visibility: visible;
+    height: 6.5rem;
+    padding: 0 6rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease-in-out;
+
+    @include respond-to(mobile-medium) {
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0 4rem;
+    }
+
+    @include respond-to(mobile-small) {
+      display: grid;
+      grid-template-columns: repeat(2, auto);
+      justify-content: center;
+      gap: 2rem;
+      padding: 1rem 0;
+      height: auto;
+    }
+
+    &.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+}

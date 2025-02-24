@@ -1,0 +1,65 @@
+.table {
+  border-collapse: collapse;
+  width: 100%;
+  background-color: rgb(17, 17, 17);
+  font-family: $font-modal;
+
+  @include respond-to(mobile-medium) {
+    overflow-x: auto;
+  }
+
+  &__container {
+    margin: 0 6rem;
+    max-width: 100%;
+    padding-bottom: 4rem;
+
+    @include respond-to(mobile-medium) {
+      overflow-x: auto;
+      margin: 0 2rem;
+    }
+  }
+
+  &__caption {
+    margin-left: 6rem;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    @include respond-to(mobile-medium) {
+      margin-left: 1rem;
+    }
+  }
+
+  &__row {
+    display: table-row;
+    padding: 0 2rem;
+
+    &:nth-of-type(2n) {
+      background-color: rgb(30, 30, 30);
+    }
+
+    &:hover {
+      outline: 1px solid #5c5c5c;
+    }
+  }
+
+  &__cell,
+  &__header-cell {
+    display: table-cell;
+    padding: 1.7rem;
+    text-align: left;
+  }
+
+  &__header {
+    .table__row {
+      outline: none;
+    }
+  }
+
+  &__hidden-cell {
+    @include respond-to(mobile-medium) {
+      display: none;
+    }
+  }
+}

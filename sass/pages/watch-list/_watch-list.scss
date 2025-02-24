@@ -1,0 +1,11 @@
+.watch-list {
+  &__empty-message {
+    padding: 2rem 0;
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  .hidden {
+    display: none;
+  }
+}

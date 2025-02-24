@@ -1,0 +1,95 @@
+.signup {
+  padding-top: 4rem;
+  font-size: 1.6rem;
+  font-family: $font-primary;
+  letter-spacing: 1.5px;
+
+  &__card {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    height: max-content;
+    padding: 3rem;
+    background-color: rgb(30, 30, 30);
+
+    &--body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      padding: 0 2rem;
+    }
+
+    &--heading {
+      margin-bottom: 2rem;
+      justify-self: center;
+      font-size: 3rem;
+    }
+  }
+
+  &__alert {
+    color: red;
+  }
+
+  &__link {
+    border-radius: 10px;
+    padding: 10px;
+    background-color: $color-secondary;
+    color: $white;
+    text-decoration: none;
+
+    &:visited {
+      color: $white;
+    }
+  }
+
+  &__control {
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1.4rem;
+    font-family: $font-modal;
+  }
+
+  &__text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    font-size: 1.8rem;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 100%;
+    max-width: 300px;
+
+    &--group {
+      display: flex;
+      gap: 1rem;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+
+  &__button {
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border: none;
+    border-radius: 5px;
+    padding: 0.8rem 1.5rem;
+    background-color: $color-secondary;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-secondary, 10%);
+    }
+  }
+}

@@ -1,0 +1,68 @@
+.character {
+  &__card {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-content: center;
+    cursor: pointer;
+    margin-top: 3rem;
+    border: none;
+    border-radius: 30px;
+    width: 28.5rem;
+    height: 38rem;
+    padding: 2.5rem 1.5rem;
+    box-shadow: 0 12px 12px rgba(0, 0, 0, 100%);
+    background-image: linear-gradient(
+      to bottom,
+      rgb(30, 30, 30),
+      rgb(17, 17, 17)
+    );
+    color: white;
+
+    &:hover {
+      transform: scale(1.03);
+      transition: transform 0.2s ease-out;
+      border: 2px solid $color-highlight;
+    }
+  }
+
+  &__img {
+    align-self: center;
+    width: 15.8rem;
+    height: 15.8rem;
+    border-radius: 50%;
+    border: 2px solid #13acc9;
+  }
+
+  &__name {
+    min-height: 4rem;
+    padding: 0 3rem;
+    font-family: $font-card;
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: left;
+    padding-left: 2rem;
+    text-align: left;
+  }
+
+  &__type {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__status {
+    justify-self: center;
+    align-self: center;
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: $color-highlight;
+  }
+}

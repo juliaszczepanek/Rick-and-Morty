@@ -33,3 +33,23 @@ CSS (SASS)
 Axios
 
 Vite
+
+📸 Screenshots
+
+Characters Page
+
+Browse and filter characters by species, status, and gender.
+
+Episodes Page
+
+Explore all episodes with detailed information and the option to add episodes to watchlists.
+
+Locations Page
+
+Discover various locations featured in the Rick and Morty universe.
+
+<img width="1175" src="./screenshots/Screenshot 2025-02-24 at 18.33.37.png">
+
+Watchlist Feature
+
+Create personalized watchlists, mark episodes as watched, and share them via email.
